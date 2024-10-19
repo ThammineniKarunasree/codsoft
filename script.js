@@ -1,14 +1,43 @@
-document.getElementById('contactForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    let name = document.getElementById('name').value;
-    let email = document.getElementById('email').value;
-    let message = document.getElementById('message').value;
+let currentInput = '';
+let operator = '';
+let previousInput = '';
 
-    if (name && email && message) {
-        alert(`Thank you, ${name}. Your message has been sent!`);
-        document.getElementById('contactForm').reset();
-    } else {
-        alert('Please fill in all fields.');
+function appendNumber(number) {
+    currentInput += number;
+    updateDisplay();
+}
+
+function setOperator(op) {
+    if (currentInput === '') return;
+    if (previousInput !== '') {
+        calculate();
     }
-});
+    operator = op;
+    previousInput = currentInput;
+    currentInput = '';
+}
+
+function calculate() {
+    let result;
+    const prev = parseFloat(previousInput);
+    const current = parseFloat(currentInput);
+    if (isNaN(prev) || isNaN(current)) return;
+    switch (operator) {
+        case '+':
+            result = prev + current;
+            break;
+        case '-':
+            result = prev - current;
+            break;
+        default:
+            return;
+    }
+    currentInput = result;
+    operator = '';
+    previousInput = '';
+    updateDisplay();
+}
+
+function updateDisplay() {
+    document.getElementById('display').value = currentInput;
+}
